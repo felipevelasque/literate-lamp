@@ -2,7 +2,7 @@
 
 **Issue:** [link após criação]  
 **Base técnica:** OrangeHRM commit `56e23b3b09e7af29317a0943523b825843fff527`, UI Vue e `EmployeeDependentAPI.php`.  
-**Status:** jornada projetada pela leitura do código, ainda não validada ponta a ponta.
+**Status:** jornada projetada pela leitura do código e validada ponta a ponta em 17/11/2026 pelos testes de sistema ST-01..ST-07 (ver `03-relatorio-execucao.md`). CA-07 (autorização) não foi testado.
 
 ## História de usuário
 

@@ -1,17 +1,13 @@
-# Suíte unitária inicial — PIM Dependents
+# Testes unitários autorais — PIM Dependents
 
-Arquivo: `T2Dependents/EmpDependentAndServiceUnitTest.php`. Aborda UT-01/02/03/04/05/06, usando PHPUnit com mocks para o DAO (sem abrir banco). **Não há garantia de execução até instalar e rodar as dependências.** A sintaxe PHP do arquivo foi verificada na criação deste pacote.
+Arquivo: `T2Dependents/EmpDependentAndServiceUnitTest.php`. Seis métodos (com dois *data providers*) geram **9 execuções e 13 asserções**, resultado **OK** no PHPUnit 9.6.16 (execução de 17/11/2026, log em `../resultados/phpunit-unitario.txt`).
 
-## Exemplo de execução local (depois de preparar o OrangeHRM)
+Verificações: equivalência `child`/`other`/inválido, atributo data de nascimento opcional, delegação de salvar/excluir e exceção de busca no serviço com mocks do DAO. **Não é necessário banco de dados para estes testes.** A anotação `@group T2Dependents` foi movida para a documentação da classe nesta atualização, corrigindo o erro que gerou `No tests executed!` com o filtro de grupo.
+
+Para repetir junto aos testes novos de integração, na raiz de `literate-lamp`:
 
 ```bash
-# Na raiz de literate-lamp, supondo o clone do OrangeHRM em ../orangehrm:
-mkdir -p ../orangehrm/src/plugins/orangehrmPimPlugin/test/T2Dependents
-cp felipe-velasque/unitario/T2Dependents/EmpDependentAndServiceUnitTest.php ../orangehrm/src/plugins/orangehrmPimPlugin/test/T2Dependents/
-
-# Na raiz de ../orangehrm, com Composer e ambiente PHP preparados:
-cd ../orangehrm
-php src/vendor/bin/phpunit --group T2Dependents --testdox
+bash felipe-velasque/scripts/rodar-phpunit.sh
 ```
 
-**Registrar no relatório:** versão PHP, PHPUnit, comando, data, `PASS/FAIL/BLOCKED`, saída do terminal e passos para reproduzir. Nunca escrever resultado "passou" sem executar.
+O script copia o arquivo para o clone do OrangeHRM, executa PHPUnit e grava `resultados/phpunit-unitario.txt`. Consulte `../docs/03-relatorio-execucao.md`.

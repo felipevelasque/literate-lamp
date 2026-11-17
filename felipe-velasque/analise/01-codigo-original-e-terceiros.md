@@ -95,4 +95,18 @@ Os 16 métodos originais oferecem uma base importante de testes de serviço e pe
 3. https://github.com/SpartanzWarrior47/orangehrm-playwright (README consultado em 17/11/2026).
 4. Enunciado T2 da disciplina de Verificação e Validação (Moodle PUCRS; capturas fornecidas pelo estudante em 17/11/2026).
 
-**Uso de IA:** ChatGPT (OpenAI), apoio à leitura de código, redação e estrutura inicial. O estudante deve revisar, aprofundar as referências externas e validar os testes em ambiente real.
+**Uso de IA:** ChatGPT (OpenAI), apoio à leitura de código, redação e estrutura inicial; Claude Code (Anthropic, Claude Opus 5.5), reexecução das suítes originais e atualização desta seção com os logs. A revisão do texto é responsabilidade do autor.
+
+## 9. Complemento após a execução dos testes originais no Mac (17/11/2026)
+
+Após a análise estática, o estudante executou as suítes originais com PHPUnit 9.6.16 no contêiner. As três suítes foram reexecutadas em 17/11/2026 com os logs salvos em `../resultados/`:
+
+| Arquivo original | Resultado observado |
+|---|---|
+| `test/Entity/EmpDependentTest.php` | 1 teste, 5 asserções, `OK` |
+| `test/Service/EmployeeDependentServiceTest.php` | 6 testes, 20 asserções, `OK` |
+| `test/Dao/EmployeeDependentDaoTest.php` | 9 testes, 28 asserções, `Risky: 9` |
+
+O DAO original gerou repetidamente o aviso de propriedade dinâmica `EmployeeDependentDaoTest::$fixture` na linha 46. Os 9 métodos não apresentaram falhas de asserção na captura, mas PHPUnit os marcou como *risky*. Essa observação modifica o estado inicial de análise estática para **análise estática + execução**, sem atribuir percentual de cobertura ou defeito funcional à aplicação. Logs: `../resultados/phpunit-entidade-original.txt`, `phpunit-servico-original.txt` e `phpunit-dao-original.txt`. Do ponto de vista crítico, isso mostra que a suíte original não acompanhou a evolução do PHP: testes *risky* passam despercebidos se o resultado for lido apenas como "OK".
+
+A interpretação e as limitações constam em `../docs/03-relatorio-execucao.md`. Os testes autorais (9 unitários, 8 de integração com banco, 3 de API REST e 7 de sistema) foram executados e aprovados; resultados e histórico de falhas no relatório de execução.
