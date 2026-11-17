@@ -1,48 +1,63 @@
-# T2 — Verificação e Validação: PIM › Dependents (OrangeHRM)
+# Trabalho T2 — Verificação e Validação do OrangeHRM
 
-**Responsável:** contribuição individual na pasta `felipe-velasque/` do repositório compartilhado `masmangan/literate-lamp`.
+## PIM — Dependents / Gerenciamento de dependentes
 
-**Estado:** preparação documental e primeira suíte unitária **ainda não executada**. Não declarar aprovação, defeito ou cobertura quantitativa sem evidência de execução.
+Contribuição individual na pasta `felipe-velasque/` do repositório da turma [`masmangan/literate-lamp`](https://github.com/masmangan/literate-lamp), enviada pelo [PR #31](https://github.com/masmangan/literate-lamp/pull/31) a partir do fork `felipevelasque/literate-lamp`.
 
-## Rastreabilidade e atividades
+### Estado das entregas em 17/11/2026
 
-| Etapa | Artefato | Situação |
+| Requisito do professor | Evidência | Situação |
 |---|---|---|
-| Análise dos testes existentes e terceiros | `analise/01-codigo-original-e-terceiros.md` | Análise estática realizada; complementar após execução dos testes originais e revisão detalhada de material externo |
-| Jornada de usuário | `docs/01-jornada.md` | Planejada com base no código do OrangeHRM |
-| Plano e projeto de casos | `docs/02-plano-de-testes.md` | Planejados; confirmar cenários exploratórios no ambiente |
-| Testes unitários | `unitario/T2Dependents/EmpDependentAndServiceUnitTest.php` | Implementação inicial, **sintaxe PHP conferida**; PHPUnit ainda não executado |
-| Testes de integração | `integracao/README.md` | A implementar e executar no OrangeHRM + banco isolado |
-| Testes de sistema | `sistema/README.md` | A implementar e executar no navegador |
-| Relatório de execução | `docs/03-relatorio-execucao.md` | Modelo a preencher somente após execução |
-| Relatório unificado | `docs/04-relatorio-unificado.md` | Estrutura inicial; completar com evidências reais |
-| GitHub Issues | `issues/roteiro.md` | Sugestões para registrar no **repositório do professor**, atribuir ao executor e vincular PRs |
+| Análise crítica do código original e de terceiros | `analise/01-codigo-original-e-terceiros.md`, `analise/02-comparacao-colegas.md` | Feita, com reexecução dos testes originais |
+| Jornada de usuário | `docs/01-jornada.md` | Feita |
+| Plano e projeto dos casos de teste | `docs/02-plano-de-testes.md` | Feito, com matriz de rastreabilidade planejado → implementado → resultado |
+| Testes unitários (PHPUnit + mocks) | `unitario/T2Dependents/EmpDependentAndServiceUnitTest.php` | **9 testes / 13 asserções / OK** |
+| Testes de integração (PHPUnit + MariaDB) | `integracao/T2Dependents/EmployeeDependentPersistenceIntegrationTest.php` | **8 testes / 30 asserções / OK** |
+| Testes de integração (API REST, Playwright) | `sistema/tests/02-api-contrato.spec.js` | **3 de 3 passaram** |
+| Testes de sistema (UI, Playwright) | `sistema/tests/01-jornada-dependentes.spec.js` | **7 de 7 passaram** |
+| Testes originais do módulo | `docs/03-relatorio-execucao.md` | Entidade 1 OK, serviço 6 OK, DAO **9 risky** (aviso de depreciação) |
+| Relatório da execução | `docs/03-relatorio-execucao.md`, `resultados/` | Feito, com histórico de falhas em `resultados/historico/` |
+| Relatório unificado | `docs/04-relatorio-unificado.md` | Feito |
+| Issues atribuídas e commits | `issues/roteiro.md` | **Pendente:** nenhuma Issue registrada ainda; textos sugeridos no roteiro |
 
-## Sistema e versão
+**Defeitos:** nenhum defeito funcional do OrangeHRM confirmado. As duas falhas vistas durante o desenvolvimento eram do código de teste e foram corrigidas. Cobertura de código não foi medida.
 
-- Repositório fonte: https://github.com/orangehrm/orangehrm
-- Revisão verificada no ZIP fornecido: `56e23b3b09e7af29317a0943523b825843fff527`.
-- Código de `Dependents`: `src/plugins/orangehrmPimPlugin/`.
-- Front-end: `src/client/src/orangehrmPimPlugin/components/{SaveDependent,EditDependent}.vue` e `pages/employee/EmployeeDependents.vue`.
+### Reproduzir no Mac (raiz `literate-lamp`)
 
-## Organização local sugerida
+Pré-condições: Docker Desktop funcionando, contêiner `phpunit` e banco de testes preparados conforme `mateus-neubarth/docs/ambiente.md`; clone original no diretório irmão `../orangehrm`.
 
-```text
-pasta-pai/
-├── literate-lamp/
-│   └── felipe-velasque/    # estes arquivos, submetidos ao fork
-└── orangehrm/             # clone do sistema sob teste, não adicionar ao fork
+```bash
+# 1) Unitário e integração Doctrine/MariaDB
+bash felipe-velasque/scripts/rodar-phpunit.sh
+
+# 2) Com aplicação OrangeHRM local ativa em http://localhost:8200, executar UI + API
+bash felipe-velasque/scripts/rodar-playwright.sh
+
+# 3) Verificar antes de enviar novos commits
+git status --short
+git diff --check
 ```
 
-## Próximos passos
+Os scripts ficam nesta contribuição e **não modificam o código-fonte de produção** do OrangeHRM; copiam somente os testes para a pasta de testes do clone. O PHPUnit usa fixtures que modificam tabelas do **banco de testes**. O Playwright cria/exclui apenas funcionários fictícios da instância local, impedindo conexão à demo pública por uma trava explícita.
 
-1. Registrar no repositório original as Issues da análise, do plano e da execução, todas atribuídas a você. Se não houver permissão para se atribuir, pedir cadastramento no Moodle/professor.
-2. Revisar com o professor a exclusividade da jornada `PIM-Dependents`.
-3. Publicar documentação de análise e plano no seu fork por commits separados, com PR para o repositório da turma.
-4. Preparar PHP, Composer, banco isolado e PHPUnit; executar suíte original e anexar saída com versão e comando exato.
-5. Executar os testes novos em três níveis; registrar falhas e limitações sem inventar resultados.
-6. Completar o relatório de execução e integrar tudo ao relatório unificado da turma.
+### Organização
 
-## Uso de IA
+- `analise/`: análise crítica do código original, comparação com materiais externos e colegas.
+- `docs/`: jornada, casos, execução, relatório unificado.
+- `unitario/`: testes de unidade com mocks.
+- `integracao/`: testes com DAO/ORM/banco de testes.
+- `sistema/`: automação Playwright da interface e da API de uma instalação local.
+- `resultados/`: logs e JUnit da execução final; `resultados/historico/` guarda as execuções com falha.
+- `scripts/`: cópia para clone e comandos reproduzíveis.
+- `issues/`: roteiro de rastreabilidade, **não é criação automática de Issues**.
 
-A organização dos artefatos, a leitura estática inicial e o código de testes unitários foram auxiliados por **ChatGPT (OpenAI)** em 17/11/2026. Os documentos e testes precisam ser revisados pelo responsável; não houve execução do PHPUnit nem de testes no navegador nesta preparação.
+### Fonte técnica
+
+Repositório original: https://github.com/orangehrm/orangehrm; commit `56e23b3b09e7af29317a0943523b825843fff527`. Os arquivos foram criados para essa revisão. A aplicação em contêiner utiliza a imagem `orangehrm/orangehrm:5.9`; não foi verificado que o SHA interno da imagem seja idêntico ao commit da análise.
+
+### Uso de IA e autoria
+
+- **ChatGPT (OpenAI):** planejamento, análise estática do código, rascunho dos casos de teste, primeira versão dos testes e scripts e redação inicial dos documentos.
+- **Claude Code (Anthropic, modelo Claude Opus 5.5):** depuração das falhas do Playwright e correção dos testes, reexecução de todas as suítes com registro dos logs, preservação do histórico de falhas, atualização dos relatórios e organização dos commits (coautoria indicada nas mensagens de commit).
+
+Os resultados vêm de execução real no Mac do estudante; nenhum número foi estimado. A revisão final e a responsabilidade pela entrega são do autor. Os trabalhos dos colegas foram consultados para estrutura e ambiente (`mateus-neubarth/ambiente/`), sem atribuir os resultados deles a esta contribuição.
