@@ -16,7 +16,8 @@ async function openDependents(page, empNumber) {
   await expect(dependentsHeader(page)).toBeVisible();
 }
 async function clickAdd(page) {
-  await dependentsHeader(page).getByRole('button', {name: 'Add', exact: true}).click();
+  // O nome acessível do botão inclui o glifo do ícone (" Add"); exact:true nunca casa.
+  await dependentsHeader(page).getByRole('button', {name: /\bAdd$/}).click();
   await expect(page.getByText('Add Dependent', {exact: true})).toBeVisible();
 }
 async function selectRelationship(page, type) {
@@ -90,6 +91,9 @@ test.describe('T2 / PIM — Dependents: sistema', () => {
     await expect(rowNamed(page, 'T2 Antes')).toBeVisible();
     await rowNamed(page, 'T2 Antes').locator('button').last().click();
     await expect(page.getByText('Edit Dependent', {exact: true})).toBeVisible();
+    // O formulário de edição carrega o registro de forma assíncrona; preencher antes
+    // disso faz o valor carregado sobrescrever o digitado.
+    await expect(field(page, 'Name').locator('input')).toHaveValue('T2 Antes');
     await field(page, 'Name').locator('input').fill('T2 Depois');
     await saveForm(page);
     await expect.poll(async () => (await listDependents(page, employeeNumber))[0]?.name).toBe('T2 Depois');
