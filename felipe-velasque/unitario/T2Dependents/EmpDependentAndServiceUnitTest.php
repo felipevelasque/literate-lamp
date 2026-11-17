@@ -6,8 +6,6 @@
  * src/plugins/orangehrmPimPlugin/test/T2Dependents/EmpDependentAndServiceUnitTest.php
  * no CLONE ORIGINAL do OrangeHRM, não na pasta do fork da turma.
  * Requer dependências PHP/Composer do OrangeHRM, PHPUnit 9.
- * @group Pim
- * @group T2Dependents
  */
 
 namespace OrangeHRM\Tests\Pim\T2Dependents;
@@ -22,6 +20,11 @@ use OrangeHRM\Pim\Dto\EmployeeDependentSearchFilterParams;
 use OrangeHRM\Pim\Service\EmployeeDependentService;
 use RuntimeException;
 
+/**
+ * @group Pim
+ * @group T2Dependents
+ * @group Unit
+ */
 class EmpDependentAndServiceUnitTest extends TestCase
 {
     /** @dataProvider validRelationshipTypes */
