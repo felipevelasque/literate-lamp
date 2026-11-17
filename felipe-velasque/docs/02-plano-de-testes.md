@@ -1,7 +1,7 @@
 # Plano de testes e projeto dos casos — PIM / Dependents
 
-**Issue:** [link após criação]  
-**Status:** planejamento; nenhum caso executado neste documento.
+**Issue:** ver `../issues/roteiro.md`  
+**Status:** plano executado em 17/11/2026. 27 testes autorais implementados e aprovados na execução final (ver `03-relatorio-execucao.md`). A matriz de rastreabilidade ao final liga cada caso planejado ao teste implementado.
 
 ## Objetivo e escopo
 
@@ -13,7 +13,7 @@ Validar operações CRUD de dependentes e testar regras de validação, persist�
 |---|---|---|---|
 | Unitário | `EmpDependent` e delegação/tratamento de erro de `EmployeeDependentService` | PHP + PHPUnit 9, mocks de DAO | Tipo aceito/rejeitado, exceções, argumentos e resultados |
 | Integração | `EmployeeDependentDao` + banco, API REST + autorização | PHP + PHPUnit + DB isolado | HTTP/status/modelo e estado persistido |
-| Sistema | Jornada PIM/Dependents no navegador | Playwright + TypeScript (escolha proposta) | UI, dados após recarga, exclusão e restrições do formulário |
+| Sistema | Jornada PIM/Dependents no navegador | Playwright + JavaScript | UI, dados após recarga, exclusão e restrições do formulário |
 
 **Critérios de seleção de dados:** equivalência (`child`, `other`, inválido), valores-limite (99/100/101 caracteres; sequência 1/99/100), tabela de decisão (`other` × especificação preenchida), transições CRUD e casos negativos de autorização. Valores-limite de identificador devem ser realizados no DAO/API conforme o contrato de cada camada, não diretamente na UI.
 
@@ -57,3 +57,40 @@ Para **cada** teste: código da versão, data/hora, responsável, comando, ambie
 ## Segurança e ética de testes
 
 Não rodar testes de autorização destrutivos na demonstração compartilhada. Não enviar credenciais, cookies ou dados pessoais nos logs e screenshots. Usar registros fictícios e exclusão de dados ao encerrar os casos.
+
+
+## Matriz de rastreabilidade: planejado → implementado → resultado (17/11/2026)
+
+Os IDs implementados não coincidem exatamente com os planejados (a numeração foi refeita na implementação). Esta tabela faz a correspondência e **não declara implementação inexistente**. Resultados conferidos em `../resultados/`.
+
+| Caso planejado | Teste implementado (arquivo › método/caso) | Resultado | Defeito |
+|---|---|---|---|
+| UT-01 | `EmpDependentAndServiceUnitTest` › `testAcceptsKnownRelationshipTypes` (2 dados) | OK | — |
+| UT-02 | mesmo › `testRejectsUnknownRelationshipTypes` (3 dados) | OK | — |
+| UT-03 | mesmo › `testDateOfBirthMayBeNullOrDate` | OK | — |
+| UT-04 | mesmo › `testServiceDelegatesSaveToDaoOnce` | OK | — |
+| UT-05 | mesmo › `testServiceDelegatesDeletionWithEmployeeAndIds` | OK | — |
+| UT-06 | mesmo › `testServiceWrapsDaoSearchException` | OK | — |
+| IT-01 | IT-DB-01 `testAutoSequenceIsIndependentForEachEmployee`; IT-DB-06 `testUpdatingExistingDependentDoesNotDuplicateRow` | OK | — |
+| IT-02 | IT-DB-07 `testSequenceNinetyNineIsAcceptedButNextAutomaticSequenceIsRejected` | OK | — |
+| IT-03 | IT-DB-02 `testDeleteCannotRemoveAnotherEmployeesSameSequence` | OK | — |
+| IT-04 | IT-API-02 (100 aceito, 101 rejeitado) | Passou | — (99 caracteres não testado) |
+| IT-05 | IT-API-03 (tipo inválido não persiste) | Passou | — |
+| IT-06 | **Não implementado** (exploratório `Other` sem especificação via API) | — | — |
+| IT-07 | IT-DB-08 `testDeletingUnknownIdReturnsZeroAndDoesNotAffectOtherEmployees` (só exclusão no DAO; consulta/edição via API não testadas) | OK | — |
+| IT-08 | **Não implementado** (autorização de outro usuário) | — | — |
+| ST-01 | ST-01 cadastra Child e persiste após recarregar | Passou* | — |
+| ST-02 | ST-02 `Other` torna *Please Specify* obrigatório | Passou* | — |
+| ST-03 | ST-03 nome obrigatório | Passou* | — |
+| ST-04 | ST-07 (101 rejeitado na UI) + IT-API-02 (100 aceito na API) | Passou | — (100 na UI não testado) |
+| ST-05 | ST-05 editar sem duplicar | Passou* | — |
+| ST-06 | ST-04 cancelar cadastro não persiste | Passou* | — |
+| ST-07 | ST-06 (parte "confirmar exclusão remove") | Passou | — |
+| ST-08 | ST-06 (parte "cancelar exclusão preserva") | Passou | — |
+| ST-09 | **Não implementado** (data inválida na UI) | — | — |
+
+**Testes implementados além do plano:** IT-DB-03 `testDeletingOneSelectedIdPreservesOtherRows`, IT-DB-04 `testExistingIdsAreFilteredByEmployee`, IT-DB-05 `testSearchAndCountRespectFiltersAndEmployee` e IT-API-01 (criar/ler/editar pela API) — todos aprovados.
+
+\* Falharam em execuções intermediárias por defeitos **do teste** (seletor do botão *Add*; condição de corrida na edição), corrigidos e reexecutados. Ver `03-relatorio-execucao.md` §3 e `../resultados/historico/`.
+
+**Lacunas assumidas:** IT-06, IT-08 e ST-09 não implementados; limites de 99 caracteres e de 100 caracteres na UI não testados; cobertura de código não medida; concorrência fora de escopo.
